@@ -42,6 +42,5 @@ docker exec {{PROJECT FOLDER NAME}}_laravel.test_1 php *args*
 ```
 To make it less verbose, there's a `sail` executable in the project. Run `./sail -v` to test its output. `./sail` is a drop-in for
 `php` and works exactly like it. You can use any `artisan` command with `./sail artisan *args*`.
-```
 
 The source for this method can be found [here](https://stackoverflow.com/a/66376387).
