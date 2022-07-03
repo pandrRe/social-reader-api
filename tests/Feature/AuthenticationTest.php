@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -11,8 +12,17 @@ class AuthenticationTest extends TestCase
     use RefreshDatabase;
 
     public function test_login_fails_if_credentials_dont_exist() {
-        $response = $this->postJson('/api/login', ['name' => 'foo', 'password' => 'bar']);
+        $response = $this->postJson('/login', ['name' => 'foo', 'password' => 'bar']);
         $response->assertStatus(400);
+    }
+
+    public function test_login_succeeds_if_credentials_match() {
+        $user = User::factory()->create([
+            'password' => Hash::make('testpassword')
+        ]);
+        $response = $this->postJson('/login', ['name' => $user->name, 'password' => 'testpassword']);
+        $response->assertOk();
+        $response->assertCookie('social_reader_api_session');
     }
 
     /**
@@ -31,7 +41,7 @@ class AuthenticationTest extends TestCase
         $user = User::find($user->id); // need to do this to load uuid.
         $response = $this->actingAs($user)->getJson('/api/user');
         $response
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'name' => $user->name,
                 'uuid' => $user->uuid,
