@@ -25,6 +25,40 @@ class AuthenticationTest extends TestCase
         $response->assertCookie('social_reader_api_session');
     }
 
+    public function test_register_a_user_and_login_with_it() {
+        $loginResponse = $this->postJson('/login', ['name' => 'testuser', 'password' => 'testpassword']);
+        $loginResponse->assertStatus(400);
+
+        $response = $this->postJson('/api/register', [
+            'name' => 'testuser',
+            'password' => 'testpassword',
+            'password_confirmation' => 'testpassword',
+            'email' => 'testemail@example.com'
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'name' => 'testuser',
+            'email' => 'testemail@example.com'
+        ]);
+
+        $loginResponse = $this->postJson('/login', ['name' => 'testuser', 'password' => 'testpassword']);
+        $loginResponse->assertOk();
+    }
+
+    public function test_cant_create_user_with_repeated_name() {
+        $user = User::factory()->create();
+        $response = $this->postJson('/api/register', [
+            'name' => $user->name,
+            'password' => 'random_password_xyz',
+            'password_confirmation' => 'random_password_xyz',
+            'email' => 'also_random_email_xyz@example.xyz'
+        ]);
+        $response
+            ->assertStatus(422)
+            ->assertJson(['message' => 'The name has already been taken.']);
+    }
+
     /**
      * Tests that the /api/user is blocked for non-authorized requesters.
      *
