@@ -1,19 +1,16 @@
 # Social Reader API
 
 ## Cloning
-
 To work on the repository, clone it with:
 ```
 git clone https://github.com/pandrRe/social-reader-api.git
 ```
 
 ## Environment Configuration
-
 This project was created with Laravel Sail, which automatizes the process of creating
 Docker containers for the project's services.
 
 ### Setup with Docker
-
 After cloning, you must run the following command to install all dependencies:
 ```bash
 docker run --rm \
@@ -25,7 +22,6 @@ docker run --rm \
 ```
 
 ## Starting it!
-
 To start the project using Sail, run the following command:
 ```
 ./vendor/bin/sail up
@@ -35,7 +31,6 @@ Add the `-d` flag if you want to run it detached from the current terminal sessi
 More information about Sail can be found [here](https://laravel.com/docs/9.x/sail).
 
 ## Mocking a PHP executable
-
 If your project is setup with Sail, its PHP executable is found within the container. You can access with the following command:
 ```
 docker exec {{PROJECT FOLDER NAME}}_laravel.test_1 php *args*
@@ -43,4 +38,20 @@ docker exec {{PROJECT FOLDER NAME}}_laravel.test_1 php *args*
 To make it less verbose, there's a `sail` executable in the project. Run `./sail -v` to test its output. `./sail` is a drop-in for
 `php` and works exactly like it. You can use any `artisan` command with `./sail artisan *args*`.
 
+If you're having permission problems, try running `sudo chown -R $USER ./` on the project folder.
+
 The source for this method can be found [here](https://stackoverflow.com/a/66376387).
+
+## Configuring Postgres extension.
+This application utilizes Postgres' `uuid` field. For it to be fully functional, you need to manually add the UUID extension to the running
+database. First, enter the database shell using the command:
+```
+./sail artisan db
+```
+
+Now, to add the extension, run the following command:
+```
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+To check if it was properly installed, run `SELECT * FROM pg_extension;`.
