@@ -81,4 +81,15 @@ class AuthenticationTest extends TestCase
                 'uuid' => $user->uuid,
             ]);
     }
+
+    public function test_unauthenticated_user_cant_logout() {
+        $response = $this->postJson('/logout');
+        $response->assertStatus(401);
+    }
+
+    public function test_authenticated_user_can_logout() {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->postJson('/logout');
+        $response->assertOk();
+    }
 }

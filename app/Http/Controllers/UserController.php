@@ -21,7 +21,15 @@ class UserController extends Controller
         }
 
         return response()
-            ->json(['status' => 'error', 'details' => ['Credentials not found.']], 400);
+            ->json(['status' => 'error', 'errors' => ['credentials' => 'Credentials not found.']], 400);
+    }
+
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()
+            ->json(['status' => 'success']);
     }
 
     public function register(Request $request) {
