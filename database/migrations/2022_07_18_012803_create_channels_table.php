@@ -22,15 +22,34 @@ return new class extends Migration
 
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
-            $table->string('guid'); // Required in Atom (as "id").
-            $table->string('title');
-            $table->text('description')->nullable(); // Required in RSS. Optional in Atom (as "subtitle").
-            $table->string('link'); // Required in RSS. Recommended in Atom.
-            $table->dateTimeTz('last_build_date')->nullable(); // Required in Atom (as "updated").
-            $table->dateTimeTz('pub_date')->nullable(); // Does not exist in Atom (use "updated").
-            $table->foreignId('language_id')->nullable()->constrained(); // Does not exist in Atom.
             $table->enum('type', ['atom', 'rss']);
             $table->string('xml_source');
+            $table->timestamps();
+        });
+
+        Schema::create('rss_channels', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('link');
+            $table->string('description');
+            $table->foreignId('language_id')->nullable()->constrained();
+            $table->dateTimeTz('pub_date')->nullable();
+            $table->dateTimeTz('last_build_date')->nullable();
+            $table->string('image')->nullable();
+            $table->foreignId('channel_id')->nullable()->constrained();
+            $table->timestamps();
+        });
+
+        Schema::create('atom_feeds', function (Blueprint $table) {
+            $table->id();
+            $table->string('atom_id')->unique();
+            $table->string('title');
+            $table->dateTimeTz('updated');
+            $table->string('link')->nullable();
+            $table->string('subtitle')->nullable();
+            $table->string('icon')->nullable();
+            $table->string('logo')->nullable();
+            $table->foreignId('channel_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -42,7 +61,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('languages');
+        Schema::dropIfExists('rss_channels');
+        Schema::dropIfExists('atom_feeds');
         Schema::dropIfExists('channels');
     }
 };
-
