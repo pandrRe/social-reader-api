@@ -16,4 +16,8 @@ class Channel extends Model
     public function atomFeed() {
         return $this->hasOne(AtomFeed::class);
     }
+
+    public function subscriptions() {
+        return $this->hasMany(ChannelSubscription::class);
+    }
 }
