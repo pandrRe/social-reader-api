@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChannelSubscription;
 use App\Services\RawChannelManager;
 use App\Models\Channel;
 use Illuminate\Http\Request;
@@ -26,7 +27,6 @@ class ChannelSubscriptionController extends Controller
             ->read();
 
         $channel = Channel::fromRawChannel($rawChannel);
-        dd($channel->atomFeed);
-        //return $sp->get_title();
+        return ChannelSubscription::fromChannelAndUser($channel, $subscribingUser);
     }
 }

@@ -19,7 +19,8 @@ class AtomFeed extends Model
         $atomFeed->atom_id = $rawChannel->getDataOf('id');
         $atomFeed->title = $rawChannel->simplePieInstance->get_title();
         $atomFeed->updated = $rawChannel->getDateTimeFromDataOf('updated');
-        $atomFeed->link = $rawChannel->simplePieInstance->get_link();
+        $atomFeed->self_link = $rawChannel->simplePieInstance->get_link(0, 'self');
+        $atomFeed->alternate_link = $rawChannel->simplePieInstance->get_link();
         $atomFeed->subtitle = $rawChannel->getDataOf('subtitle');
         $atomFeed->icon = $rawChannel->getDataOf('icon');
         $atomFeed->logo = $rawChannel->getDataOf('logo');

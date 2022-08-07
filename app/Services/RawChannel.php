@@ -21,6 +21,16 @@ class RawChannel
         return $this->isLoaded;
     }
 
+    public function getSource() {
+        $subscriptionUrl = $this->simplePieInstance->subscribe_url();
+        if ($subscriptionUrl) {
+            return $subscriptionUrl;
+        }
+        else {
+            return $this->simplePieInstance->get_link(0, 'self');
+        }
+    }
+
     public function getChecksum(){
         $rawData = $this->simplePieInstance->get_raw_data();
         if ($rawData) {
@@ -79,7 +89,8 @@ class RawChannel
         $data = $this->getDataOf($tagName);
         $dateFormat = $this->getDateFormat();
         if ($data && $dateFormat) {
-            $dateTime = DateTime::createFromFormat($dateFormat, $data);
+            $treatedData = str_replace('.000000000', '', $data);
+            $dateTime = DateTime::createFromFormat($dateFormat, $treatedData);
             if ($dateTime instanceof DateTime) {
                 return $dateTime;
             }

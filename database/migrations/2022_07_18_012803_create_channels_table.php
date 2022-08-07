@@ -46,7 +46,8 @@ return new class extends Migration
             $table->string('atom_id')->unique();
             $table->string('title');
             $table->dateTimeTz('updated');
-            $table->string('link')->nullable();
+            $table->string('self_link')->nullable();
+            $table->string('alternate_link')->nullable();
             $table->string('subtitle')->nullable();
             $table->string('icon')->nullable();
             $table->string('logo')->nullable();

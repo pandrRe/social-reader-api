@@ -16,4 +16,12 @@ class ChannelSubscription extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public static function fromChannelAndUser(Channel $channel, User $user) {
+        $channelSubscription = new ChannelSubscription();
+        $channelSubscription->channel()->associate($channel);
+        $channelSubscription->user()->associate($user);
+        $channelSubscription->save();
+        return $channelSubscription;
+    }
 }

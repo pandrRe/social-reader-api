@@ -43,7 +43,7 @@ class Channel extends Model
 
     public static function fromRawChannel(RawChannel $rawChannel): Channel | null {
         $channel = new Channel();
-        $channel->xml_source = $rawChannel->simplePieInstance->subscribe_url();
+        $channel->xml_source = $rawChannel->getSource();
         $channel->type = $rawChannel->isRss()? 'rss' : 'atom';
         $channel->md5_checksum = $rawChannel->getChecksum();
 
