@@ -24,6 +24,7 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['atom', 'rss']);
             $table->string('xml_source');
+            $table->string('md5_checksum');
             $table->timestamps();
         });
 

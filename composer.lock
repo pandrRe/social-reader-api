@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b26b0578f1fe021437c539a380877236",
+    "content-hash": "51f611dea3bf317a189c92cc6b09f760",
     "packages": [
         {
             "name": "brick/math",
@@ -5051,67 +5051,6 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.4"
             },
             "time": "2021-12-08T09:12:39+00:00"
-        },
-        {
-            "name": "vedmant/laravel-feed-reader",
-            "version": "1.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vedmant/laravel-feed-reader.git",
-                "reference": "4ed89676cefd0b2311a53c3a5b898181d8e099a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vedmant/laravel-feed-reader/zipball/4ed89676cefd0b2311a53c3a5b898181d8e099a7",
-                "reference": "4ed89676cefd0b2311a53c3a5b898181d8e099a7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "php": ">=5.6.0",
-                "simplepie/simplepie": "^1.5"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^5.0",
-                "phpunit/phpunit": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Vedmant\\FeedReader\\FeedReaderServiceProvider"
-                    ],
-                    "aliases": {
-                        "FeedReader": "Vedmant\\FeedReader\\Facades\\FeedReader"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Vedmant\\FeedReader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Vedmant",
-                    "email": "vedmant@gmail.com"
-                },
-                {
-                    "name": "Andrew Judd",
-                    "email": "contact@andrewjudd.ca"
-                }
-            ],
-            "description": "A simple RSS feed reader for Laravel 5|6",
-            "support": {
-                "issues": "https://github.com/vedmant/laravel-feed-reader/issues",
-                "source": "https://github.com/vedmant/laravel-feed-reader/tree/1.5.2"
-            },
-            "time": "2022-02-14T02:44:56+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
