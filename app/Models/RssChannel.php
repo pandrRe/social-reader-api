@@ -22,7 +22,7 @@ class RssChannel extends Model
         $rssChannel = new RssChannel();
         $rssChannel->title = $rawChannel->simplePieInstance->get_title();
         $rssChannel->description = $rawChannel->simplePieInstance->get_description();
-        $rssChannel->link = $rawChannel->simplePieInstance->get_link();
+        $rssChannel->link = $rawChannel->getDataOf('link');
         $rssChannel->pub_date = $rawChannel->getDateTimeFromDataOf('pubDate');
         $rssChannel->last_build_date = $rawChannel->getDateTimeFromDataOf('lastBuildDate');
         $rssChannel->image = $rawChannel->simplePieInstance->get_image_url();

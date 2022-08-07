@@ -28,10 +28,45 @@ class ChannelSubscriptionTest extends TestCase {
     </feed>
     EOT;
 
+    private $rssFeed = <<<EOT
+    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+    <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+        <channel>
+            <title>Test RSS Feed</title>
+            <link>http://rssfeed.example/feed</link>
+            <lastBuildDate>Sun, 07 Aug 2022 22:00:41 GMT</lastBuildDate>
+            <description>This is a test RSS feed.</description>
+        </channel>
+    </rss>
+    EOT;
+
     private function mockedAtomRawChannel() {
         $sp = new SimplePie();
         $sp->set_raw_data($this->atomFeed);
         return new RawChannel($sp);
+    }
+
+    private function mockedRssRawChannel() {
+        $sp = new SimplePie();
+        $sp->set_raw_data($this->rssFeed);
+        return new RawChannel($sp);
+    }
+
+    private function mockNextChannelRead(RawChannel $channel) {
+        $mockedRawChannelDescriptor = Mockery::mock(
+            RawChannelDescriptor::class,
+            function (MockInterface $mock) use ($channel) {
+                $mock->shouldReceive('read')
+                    ->once()
+                    ->andReturn($channel);
+            }
+        );
+
+        $this->partialMock(RawChannelManager::class, function (MockInterface $mock) use ($mockedRawChannelDescriptor) {
+            $mock->shouldReceive('createRawChannel')
+                ->once()
+                ->andReturn($mockedRawChannelDescriptor);
+        });
     }
 
     public function tearDown(): void {
@@ -40,17 +75,7 @@ class ChannelSubscriptionTest extends TestCase {
 
     public function test_that_subscription_to_a_new_atom_feed_is_created()
     {
-        $mockedRawChannelDescriptor = Mockery::mock(RawChannelDescriptor::class, function (MockInterface $mock) {
-            $mock->shouldReceive('read')
-                ->once()
-                ->andReturn($this->mockedAtomRawChannel());
-        });
-
-        $this->partialMock(RawChannelManager::class, function (MockInterface $mock) use ($mockedRawChannelDescriptor) {
-            $mock->shouldReceive('createRawChannel')
-                ->once()
-                ->andReturn($mockedRawChannelDescriptor);
-        });
+        $this->mockNextChannelRead($this->mockedAtomRawChannel());
 
         $user = User::factory()->create();
 
@@ -70,6 +95,35 @@ class ChannelSubscriptionTest extends TestCase {
         $this->assertDatabaseHas('atom_feeds', [
             'title' => 'Test Atom Feed',
             'self_link' => 'http://atomfeed.example/feed',
+            'channel_id' => $channel->id,
+        ]);
+        $this->assertDatabaseHas('channel_subscriptions', [
+            'user_id' => $user->id,
+            'channel_id' => $channel->id,
+        ]);
+    }
+
+    public function test_that_subscription_to_a_new_rss_channel_is_created() {
+        $this->mockNextChannelRead($this->mockedRssRawChannel());
+
+        $user = User::factory()->create();
+
+        $this->assertDatabaseMissing('channels', [
+            'xml_source' => 'http://rssfeed.example/feed'
+        ]);
+        $response = $this->actingAs($user)->postJson('/api/subscription', [
+            'xml_source' => 'http://rssfeed.example/feed'
+        ]);
+        $response->assertCreated();
+
+        $channel = Channel::query()
+            ->where('xml_source', 'http://rssfeed.example/feed')
+            ->where('type', 'rss')
+            ->first();
+        $this->assertModelExists($channel);
+        $this->assertDatabaseHas('rss_channels', [
+            'title' => 'Test RSS Feed',
+            'link' => 'http://rssfeed.example/feed',
             'channel_id' => $channel->id,
         ]);
         $this->assertDatabaseHas('channel_subscriptions', [

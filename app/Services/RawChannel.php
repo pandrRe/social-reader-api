@@ -27,7 +27,9 @@ class RawChannel
             return $subscriptionUrl;
         }
         else {
-            return $this->simplePieInstance->get_link(0, 'self');
+            return $this->isAtom()?
+                $this->simplePieInstance->get_link(0, 'self')
+                : $this->simplePieInstance->get_link(0);
         }
     }
 
