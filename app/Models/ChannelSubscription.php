@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class ChannelSubscription extends Model
 {
@@ -23,5 +24,13 @@ class ChannelSubscription extends Model
         $channelSubscription->user()->associate($user);
         $channelSubscription->save();
         return $channelSubscription;
+    }
+
+    public static function findByIdAndUser(int $id, User $user) {
+        return ChannelSubscription::query()
+            ->where('id', $id)
+            ->whereHas('user', function (Builder $query) use ($user) {
+                $query->where()
+            });
     }
 }
