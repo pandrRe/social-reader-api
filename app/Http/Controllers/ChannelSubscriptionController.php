@@ -21,11 +21,20 @@ class ChannelSubscriptionController extends Controller
         ]);
         $subscribingUser = $request->user();
 
-        $rawChannel = $this->rawChannelManager
-            ->createRawChannel($submittedSubscription['xml_source'])
-            ->read();
+        $channel = Channel::fromXmlSource($submittedSubscription['xml_source']);
+        if (!$channel) {
+            $rawChannel = $this->rawChannelManager
+                ->createRawChannel($submittedSubscription['xml_source'])
+                ->read();
 
-        $channel = Channel::fromRawChannel($rawChannel);
+            $channel = Channel::fromRawChannel($rawChannel);
+        }
+
+        $existingSubscription = ChannelSubscription::findOneByChannelAndUser($channel, $subscribingUser);
+        if ($existingSubscription) {
+            return response()
+                ->json(['status' => 'error', 'errors' => ['subscription' => 'User is already subscribed to this channel.']], 400);
+        }
         return ChannelSubscription::fromChannelAndUser($channel, $subscribingUser);
     }
 

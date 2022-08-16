@@ -20,6 +20,7 @@ class ChannelFactory extends Factory
             'type' => Arr::random(['rss', 'atom']),
             'xml_source' => fake()->url(),
             'md5_checksum' => fake()->md5(),
+            'ttl' => 60,
         ];
     }
 

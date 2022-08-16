@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AtomFeed;
 use App\Services\RawChannel;
 use App\Services\RawChannelDescriptor;
 use App\Services\RawChannelManager;
@@ -126,6 +127,24 @@ class ChannelSubscriptionTest extends TestCase {
             'link' => 'http://rssfeed.example/feed',
             'channel_id' => $channel->id,
         ]);
+        $this->assertDatabaseHas('channel_subscriptions', [
+            'user_id' => $user->id,
+            'channel_id' => $channel->id,
+        ]);
+    }
+
+    public function test_that_subscription_to_existing_channel_is_created() {
+        $channel = Channel::factory()->atom()->hasAtomFeed()->create();
+        $user = User::factory()->create();
+
+        $this->assertDatabaseMissing('channel_subscriptions', [
+            'user_id' => $user->id,
+            'channel_id' => $channel->id,
+        ]);
+        $response = $this->actingAs($user)->postJson('/api/subscription', [
+            'xml_source' => $channel->xml_source,
+        ]);
+        $response->assertCreated();
         $this->assertDatabaseHas('channel_subscriptions', [
             'user_id' => $user->id,
             'channel_id' => $channel->id,

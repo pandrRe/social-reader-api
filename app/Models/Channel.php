@@ -41,6 +41,12 @@ class Channel extends Model
         }
     }
 
+    public static function fromXmlSource(string $xmlSource) {
+        return Channel::query()
+            ->where('xml_source', $xmlSource)
+            ->first();
+    }
+
     public static function fromRawChannel(RawChannel $rawChannel): Channel | null {
         $channel = new Channel();
         $channel->xml_source = $rawChannel->getSource();
@@ -50,13 +56,6 @@ class Channel extends Model
 
         if (!$channel->ttl) {
             $channel->ttl = 60;
-        }
-
-        $existingChannel = Channel::query()
-            ->where('xml_source', $channel->xml_source)
-            ->first();
-        if ($existingChannel instanceof Channel) {
-            return $existingChannel;
         }
 
         $channelDataModel = $channel->makeChannelDataModel($rawChannel);

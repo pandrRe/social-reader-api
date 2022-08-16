@@ -45,6 +45,17 @@ class ChannelSubscription extends Model
             ->first();
     }
 
+    public static function findOneByChannelAndUser(Channel $channel, User $user) {
+        return ChannelSubscription::query()
+            ->whereHas('user', function (Builder $query) use ($user) {
+                $query->where('id', $user->id);
+            })
+            ->whereHas('channel', function (Builder $query) use ($channel) {
+                $query->where('id', $channel->id);
+            })
+            ->first();
+    }
+
     public static function unsubscribe($id, User $user) {
         $subscription = self::findOneByIdAndUser($id, $user);
         if ($subscription) {

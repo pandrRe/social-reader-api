@@ -23,7 +23,7 @@ return new class extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['atom', 'rss']);
-            $table->string('xml_source');
+            $table->string('xml_source')->unique();
             $table->string('md5_checksum');
             $table->integer('ttl')->default(60);
             $table->timestamps();

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('channel_id')->nullable()->constrained();
+            $table->unique(['user_id', 'channel_id']);
             $table->timestamps();
         });
     }
