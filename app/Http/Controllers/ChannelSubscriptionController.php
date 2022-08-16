@@ -6,7 +6,6 @@ use App\Models\ChannelSubscription;
 use App\Services\RawChannelManager;
 use App\Models\Channel;
 use Illuminate\Http\Request;
-use SimplePie\SimplePie;
 
 class ChannelSubscriptionController extends Controller
 {
@@ -28,5 +27,16 @@ class ChannelSubscriptionController extends Controller
 
         $channel = Channel::fromRawChannel($rawChannel);
         return ChannelSubscription::fromChannelAndUser($channel, $subscribingUser);
+    }
+
+    public function unsubscribe(Request $request, $subscriptionId) {
+        $user = $request->user();
+        ChannelSubscription::unsubscribe($subscriptionId, $user);
+        return 'OK';
+    }
+
+    public function getOfUser(Request $request) {
+        $user = $request->user();
+        return ChannelSubscription::findByUser($user);
     }
 }

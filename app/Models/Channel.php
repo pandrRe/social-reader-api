@@ -46,6 +46,11 @@ class Channel extends Model
         $channel->xml_source = $rawChannel->getSource();
         $channel->type = $rawChannel->isRss()? 'rss' : 'atom';
         $channel->md5_checksum = $rawChannel->getChecksum();
+        $channel->ttl = $rawChannel->getDataOf('ttl');
+
+        if (!$channel->ttl) {
+            $channel->ttl = 60;
+        }
 
         $existingChannel = Channel::query()
             ->where('xml_source', $channel->xml_source)

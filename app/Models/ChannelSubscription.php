@@ -26,11 +26,30 @@ class ChannelSubscription extends Model
         return $channelSubscription;
     }
 
-    public static function findByIdAndUser(int $id, User $user) {
+    public static function findByUser(User $user) {
+        return ChannelSubscription::query()
+            ->whereHas('user', function (Builder $query) use ($user) {
+                $query->where('id', $user->id);
+            })
+            ->with('channel')
+            ->get();
+    }
+
+    public static function findOneByIdAndUser($id, User $user) {
         return ChannelSubscription::query()
             ->where('id', $id)
             ->whereHas('user', function (Builder $query) use ($user) {
-                $query->where()
-            });
+                $query->where('id', $user->id);
+            })
+            ->with('channel')
+            ->first();
+    }
+
+    public static function unsubscribe($id, User $user) {
+        $subscription = self::findOneByIdAndUser($id, $user);
+        if ($subscription) {
+            return $subscription->delete();
+        }
+        return true;
     }
 }
