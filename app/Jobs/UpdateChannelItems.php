@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Channel;
+use App\Services\RawChannelManager;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,8 +36,11 @@ class UpdateChannelItems implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function handle()
+    public function handle(RawChannelManager $rawChannelManager)
     {
-
+        $rawChannel = $rawChannelManager
+            ->createRawChannel($this->channel->xml_source)
+            ->read();
+        $this->channel->updateItems($rawChannel);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateChannelItems;
 use App\Models\ChannelSubscription;
 use App\Services\RawChannelManager;
 use App\Models\Channel;
@@ -28,6 +29,7 @@ class ChannelSubscriptionController extends Controller
                 ->read();
 
             $channel = Channel::fromRawChannel($rawChannel);
+            UpdateChannelItems::dispatchIf($channel->wasRecentlyCreated, $channel);
         }
 
         $existingSubscription = ChannelSubscription::findOneByChannelAndUser($channel, $subscribingUser);

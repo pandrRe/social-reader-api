@@ -32,7 +32,7 @@ return new class extends Migration
 
         Schema::create('atom_entries', function (Blueprint $table) {
             $table->id();
-            $table->string('atom_id')->unique();
+            $table->string('atom_id');
             $table->string('title');
             $table->dateTimeTz('updated');
             $table->string('author')->nullable();
@@ -40,6 +40,7 @@ return new class extends Migration
             $table->string('summary')->nullable();
             $table->string('link')->nullable();
             $table->foreignId('channel_id')->nullable()->constrained();
+            $table->unique(['channel_id', 'atom_id']);
             $table->timestamps();
         });
     }

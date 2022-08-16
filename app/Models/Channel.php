@@ -73,4 +73,19 @@ class Channel extends Model
 
         return $channel;
     }
+
+    public function updateItems(RawChannel $rawChannel) {
+        $this->load('items');
+
+        $rawItems = $rawChannel->simplePieInstance->get_items();
+
+        foreach ($rawItems as $rawItem) {
+            if ($rawItem instanceof \SimplePie_Item) {
+                if ($this->type === 'rss') {
+                    $upsertableArray = RssItem::upsertableFromRawItem($rawItem, $this);
+                    $this->items()->updateOrCreate(...$upsertableArray);
+                }
+            }
+        }
+    }
 }

@@ -37,6 +37,14 @@ class ChannelSubscriptionTest extends TestCase {
             <link>http://rssfeed.example/feed</link>
             <lastBuildDate>Sun, 07 Aug 2022 22:00:41 GMT</lastBuildDate>
             <description>This is a test RSS feed.</description>
+            <item>
+                <title>Test RSS Item</title>
+                <link>http://rssfeed.example/item/1</link>
+                <guid isPermaLink="false">111111111</guid>
+                <pubDate>Sun, 07 Aug 2022 22:00:41 GMT</pubDate>
+                <description>Item description.</description>
+                <source url="https://rssfeed.example">RSS Example</source>
+            </item>
         </channel>
     </rss>
     EOT;
@@ -58,14 +66,12 @@ class ChannelSubscriptionTest extends TestCase {
             RawChannelDescriptor::class,
             function (MockInterface $mock) use ($channel) {
                 $mock->shouldReceive('read')
-                    ->once()
                     ->andReturn($channel);
             }
         );
 
         $this->partialMock(RawChannelManager::class, function (MockInterface $mock) use ($mockedRawChannelDescriptor) {
             $mock->shouldReceive('createRawChannel')
-                ->once()
                 ->andReturn($mockedRawChannelDescriptor);
         });
     }
