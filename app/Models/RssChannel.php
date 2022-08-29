@@ -18,6 +18,10 @@ class RssChannel extends Model
         return $this->belongsTo(Channel::class);
     }
 
+    public function items() {
+        return $this->hasMany(RssItem::class);
+    }
+
     public static function makeFromRawChannel(RawChannel $rawChannel) {
         $rssChannel = new RssChannel();
         $rssChannel->title = $rawChannel->simplePieInstance->get_title();

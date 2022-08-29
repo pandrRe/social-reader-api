@@ -29,7 +29,8 @@ class ChannelSubscriptionController extends Controller
                 ->read();
 
             $channel = Channel::fromRawChannel($rawChannel);
-            UpdateChannelItems::dispatchIf($channel->wasRecentlyCreated, $channel);
+            $channel->updateItems($rawChannel);
+            //UpdateChannelItems::dispatchIf($channel->wasRecentlyCreated, $channel);
         }
 
         $existingSubscription = ChannelSubscription::findOneByChannelAndUser($channel, $subscribingUser);

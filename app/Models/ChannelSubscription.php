@@ -31,7 +31,10 @@ class ChannelSubscription extends Model
             ->whereHas('user', function (Builder $query) use ($user) {
                 $query->where('id', $user->id);
             })
-            ->with('channel')
+            ->with(['channel' => function ($query) {
+                $query->with('rssChannel');
+                $query->with('atomFeed');
+            }])
             ->get();
     }
 

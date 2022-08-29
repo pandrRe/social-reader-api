@@ -23,12 +23,6 @@ class Channel extends Model
         return $this->hasMany(ChannelSubscription::class);
     }
 
-    public function items() {
-        return $this->type === 'rss'?
-            $this->hasMany(RssItem::class)
-            : $this->hasMany(AtomEntry::class );
-    }
-
     public function makeChannelDataModel($rawChannel): RssChannel | AtomFeed {
         if ($this->type === 'rss') {
             return RssChannel::makeFromRawChannel($rawChannel);

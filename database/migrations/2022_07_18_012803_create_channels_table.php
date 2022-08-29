@@ -33,7 +33,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('link');
-            $table->string('description');
+            $table->text('description');
             $table->foreignId('language_id')->nullable()->constrained();
             $table->dateTimeTz('pub_date')->nullable();
             $table->dateTimeTz('last_build_date')->nullable();

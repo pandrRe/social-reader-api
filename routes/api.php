@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/subscription', [ChannelSubscriptionController::class, 'subscribe']);
+    Route::get('/subscription', [ChannelSubscriptionController::class, 'getOfUser']);
 });
 
 Route::post('register', [UserController::class, 'register']);

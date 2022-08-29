@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('rss_items', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->string('link')->nullable();
-            $table->string('description')->nullable();
+            $table->text('title')->nullable();
+            $table->text('link')->nullable();
+            $table->text('description')->nullable();
             $table->string('author')->nullable();
             $table->string('comments')->nullable();
-            $table->string('guid')->nullable();
+            $table->text('guid')->nullable();
             $table->string('source')->nullable();
             $table->dateTimeTz('pub_date')->nullable();
             $table->foreignId('channel_id')->nullable()->constrained();
@@ -52,6 +52,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('rss_items');
+        Schema::dropIfExists('atom_entries');
     }
 };
