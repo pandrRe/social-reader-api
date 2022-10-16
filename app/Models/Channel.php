@@ -19,6 +19,14 @@ class Channel extends Model
         return $this->hasOne(AtomFeed::class);
     }
 
+    public function rssItems() {
+        return $this->hasMany(RssItem::class);
+    }
+
+    public function atomEntries() {
+        return $this->hasMany(AtomEntry::class);
+    }
+
     public function subscriptions() {
         return $this->hasMany(ChannelSubscription::class);
     }
@@ -69,17 +77,41 @@ class Channel extends Model
     }
 
     public function updateItems(RawChannel $rawChannel) {
-        $this->load('items');
-
         $rawItems = $rawChannel->simplePieInstance->get_items();
 
         foreach ($rawItems as $rawItem) {
             if ($rawItem instanceof \SimplePie_Item) {
                 if ($this->type === 'rss') {
                     $upsertableArray = RssItem::upsertableFromRawItem($rawItem, $this);
-                    $this->items()->updateOrCreate(...$upsertableArray);
+                    $this->rssItems()->updateOrCreate(...$upsertableArray);
                 }
             }
         }
+    }
+
+    public function items() {
+        return $this->type === 'rss'?
+            $this->rssItems
+            : $this->atomEntries;
+    }
+
+    public static function findItemsByUserAndId(User $user, $channelId = null) {
+        $channels = Channel::query()
+            ->whereHas('subscriptions', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
+        
+        if ($channelId) {
+            $channels->where('id', $channelId);
+        }
+        $channels = $channels->get();
+
+        if (!$channels || $channels->count() === 0) {
+            return collect([]);
+        }
+
+        return $channels->flatMap(function ($channel) {
+            return $channel->items();
+        });
     }
 }

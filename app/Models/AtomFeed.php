@@ -14,10 +14,6 @@ class AtomFeed extends Model
         return $this->belongsTo(Channel::class);
     }
 
-    public function entries() {
-        return $this->hasMany(AtomEntry::class);
-    }
-
     public static function makeFromRawChannel(RawChannel $rawChannel) {
         $atomFeed = new AtomFeed();
         $atomFeed->atom_id = $rawChannel->getDataOf('id');
