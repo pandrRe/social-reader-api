@@ -20,11 +20,11 @@ class Channel extends Model
     }
 
     public function rssItems() {
-        return $this->hasMany(RssItem::class);
+        return $this->hasMany(RssItem::class)->orderBy('id');
     }
 
     public function atomEntries() {
-        return $this->hasMany(AtomEntry::class);
+        return $this->hasMany(AtomEntry::class)->orderBy('id');
     }
 
     public function subscriptions() {

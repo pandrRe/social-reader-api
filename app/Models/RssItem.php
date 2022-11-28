@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class RssItem extends Model
 {
@@ -43,12 +44,15 @@ class RssItem extends Model
         $source = self::getData($rawItem, 'source');
         $pubDate = self::getDateTimeFromData($rawItem, 'pubDate');
 
+        Log::info($rawItem->get_title());
+
         if ($guid) {
             return [
                 ['guid' => $guid, 'channel_id' => $channel->id],
                 [
                     'title' => $rawItem->get_title(),
                     'description' => $rawItem->get_description(),
+                    'content' => $rawItem->get_content(true),
                     'link' => $link,
                     'author' => $rawItem->get_author()? $rawItem->get_author()->get_name() : null,
                     'comments' => $comments,
@@ -63,6 +67,7 @@ class RssItem extends Model
                 [
                     'title' => $rawItem->get_title(),
                     'description' => $rawItem->get_description(),
+                    'content' => $rawItem->get_content(true),
                     'author' => $rawItem->get_author()? $rawItem->get_author()->get_name() : null,
                     'comments' => $comments,
                     'source' => $source,
@@ -73,6 +78,7 @@ class RssItem extends Model
         return [
             ['title' => $rawItem->get_title(), 'description' => $rawItem->get_description(), 'channel_id' => $channel->id],
             [
+                'content' => $rawItem->get_content(true),
                 'author' => $rawItem->get_author()? $rawItem->get_author()->get_name() : null,
                 'comments' => $comments,
                 'source' => $source,

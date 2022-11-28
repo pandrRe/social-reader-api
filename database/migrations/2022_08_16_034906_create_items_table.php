@@ -18,12 +18,13 @@ return new class extends Migration
             $table->text('title')->nullable();
             $table->text('link')->nullable();
             $table->text('description')->nullable();
+            $table->text('content')->nullable();
             $table->string('author')->nullable();
             $table->string('comments')->nullable();
             $table->text('guid')->nullable();
             $table->string('source')->nullable();
             $table->dateTimeTz('pub_date')->nullable();
-            $table->foreignId('channel_id')->nullable()->constrained();
+            $table->foreignId('channel_id')->constrained();
             $table->unique(['channel_id', 'title', 'description']);
             $table->unique(['channel_id', 'link']);
             $table->unique(['channel_id', 'guid']);
@@ -39,7 +40,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('summary')->nullable();
             $table->string('link')->nullable();
-            $table->foreignId('channel_id')->nullable()->constrained();
+            $table->foreignId('channel_id')->constrained();
             $table->unique(['channel_id', 'atom_id']);
             $table->timestamps();
         });
