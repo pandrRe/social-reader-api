@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\FolderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/subscription', [ChannelSubscriptionController::class, 'subscribe']);
     Route::get('/subscription', [ChannelSubscriptionController::class, 'getOfUser']);
     Route::get('/items', [ItemsController::class, 'getItems']);
+    Route::apiResource('folders', FolderController::class);
 });
 
 Route::post('register', [UserController::class, 'register']);
